@@ -42,8 +42,7 @@ def predict(model_name):
             print('JSON: \n', json_)
             query = pd.DataFrame(json_, columns=model_columns)
             print(query.info())
-            fitted_model  = loaded_model[model_name].fit(X_train_df,y_train_df)
-            y_pred = fitted_model.predict(X_test_df)
+            y_pred = loaded_model[model_name].predict(X_test_df)
             prediction = list(loaded_model[model_name].predict(query))
             
             return jsonify({"Accuracy":metrics.accuracy_score(y_test_df, y_pred),
