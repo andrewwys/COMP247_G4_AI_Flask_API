@@ -19,7 +19,7 @@ project_folder = r'C:\Projects\COMP247\Final_Project\_deploy'
 models = {
           "Random_Forest": "group4_rf_fullpipe_rajiv.pkl"
          ,"Neuro_Network": "group4_nn_fullpipe_v7_andrew.pkl"
-         ,"Decision_Tree": "group4_nn_fullpipe_v7_andrew.pkl"
+         ,"Decision_Tree": "group4_dt_fullpipeline_manvir.pkl"
          ,"Logistic_Regression": "group4_nn_fullpipe_v7_andrew.pkl"
          ,"SVM": "group4_nn_fullpipe_v7_andrew.pkl"
          }
