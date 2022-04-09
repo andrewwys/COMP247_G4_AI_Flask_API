@@ -59,10 +59,10 @@ if __name__ == '__main__':
     # load all models:
     loaded_model = {}
     for model_name in (models):
-        loaded_model[model_name] = pickle.load(path.join(project_folder, models[model_name]))
+        loaded_model[model_name] = pickle.load(open(path.join(project_folder, models[model_name]),"rb"))
         print(f'Model {model_name} loaded')
         
-    model_columns = pickle.load(path.join(project_folder, cols_pkl))
+    model_columns = pickle.load(open(path.join(project_folder, cols_pkl),"rb"))
     print ('Model columns loaded')
     
     app.run(port=port, debug=True)
