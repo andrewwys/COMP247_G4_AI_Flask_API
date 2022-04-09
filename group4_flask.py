@@ -13,17 +13,23 @@ import pandas as pd
 import joblib
 import sys
 from os import path
+from sklearn import metrics
 
 project_folder = r'C:\Projects\COMP247\Final_Project\_deploy'
 models = {
-        "Random_Forest": "group4_nn_fullpipe_v7_andrew.pkl",
-        "Neuro_Network": "group4_nn_fullpipe_v7_andrew.pkl",
-        "Decision_Tree": "group4_nn_fullpipe_v7_andrew.pkl",
-        "Logistic_Regression": "group4_nn_fullpipe_v7_andrew.pkl",
-        "SVM": "group4_nn_fullpipe_v7_andrew.pkl"
-    }
+          "Random_Forest": "group4_rf_fullpipe_rajiv.pkl"
+         ,"Neuro_Network": "group4_nn_fullpipe_v7_andrew.pkl"
+         ,"Decision_Tree": "group4_nn_fullpipe_v7_andrew.pkl"
+         ,"Logistic_Regression": "group4_nn_fullpipe_v7_andrew.pkl"
+         ,"SVM": "group4_nn_fullpipe_v7_andrew.pkl"
+         }
 
 cols_pkl = 'group4_model_columns.pkl'
+
+X_train_df = pd.read_csv(path.join(project_folder,"x_train_data.csv"))
+y_train_df = pd.read_csv(path.join(project_folder,"y_train_data.csv"))
+X_test_df = pd.read_csv(path.join(project_folder,"x_test_data.csv"))
+y_test_df = pd.read_csv(path.join(project_folder,"y_test_data.csv"))
 
 # Your API definition
 app = Flask(__name__)
@@ -36,10 +42,16 @@ def predict(model_name):
             print('JSON: \n', json_)
             query = pd.DataFrame(json_, columns=model_columns)
             print(query.info())
+            fitted_model  = loaded_model[model_name].fit(X_train_df,y_train_df)
+            y_pred = fitted_model.predict(X_test_df)
             prediction = list(loaded_model[model_name].predict(query))
-            print({'prediction': str(prediction)})
-            return jsonify({'prediction': str(prediction)})
-            return "Welcome to COMP247 - Group 4 APIs!"
+            
+            return jsonify({"Accuracy":metrics.accuracy_score(y_test_df, y_pred),
+                            "Precision":metrics.precision_score(y_test_df, y_pred),
+                            "Recall:":metrics.recall_score(y_test_df, y_pred),
+                            "f1 score:":metrics.f1_score(y_test_df, y_pred),
+                            "prediction": str(prediction)
+                           })
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
