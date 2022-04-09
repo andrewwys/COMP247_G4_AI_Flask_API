@@ -45,10 +45,10 @@ def predict(model_name):
             y_pred = loaded_model[model_name].predict(X_test_df)
             prediction = list(loaded_model[model_name].predict(query))
             
-            return jsonify({"Accuracy":metrics.accuracy_score(y_test_df, y_pred),
-                            "Precision":metrics.precision_score(y_test_df, y_pred),
-                            "Recall:":metrics.recall_score(y_test_df, y_pred),
-                            "f1 score:":metrics.f1_score(y_test_df, y_pred),
+            return jsonify({"accuracy":metrics.accuracy_score(y_test_df, y_pred),
+                            "precision":metrics.precision_score(y_test_df, y_pred),
+                            "recall:":metrics.recall_score(y_test_df, y_pred),
+                            "f1:":metrics.f1_score(y_test_df, y_pred),
                             "prediction": str(prediction)
                            })
         except:
