@@ -9,22 +9,27 @@ from flask import Flask, request, jsonify
 import traceback
 import pandas as pd
 #from sklearn import preprocessing
-import joblib
+import pickle
 import sys
 from os import path
 
 project_folder = r'C:\Projects\COMP247\Final_Project\_deploy'
-models_pkl = [
-    'group4_nn_fullpipe_v7_andrew.pkl'
-    ]
+models = {
+        "Random Forest": "group4_nn_fullpipe_v7_andrew.pkl",
+        "Neuro Network": "group4_nn_fullpipe_v7_andrew.pkl",
+        "Decision Tree": "group4_nn_fullpipe_v7_andrew.pkl",
+        "Logistic Regression": "group4_nn_fullpipe_v7_andrew.pkl",
+        "SVM": "group4_nn_fullpipe_v7_andrew.pkl"
+    }
+
 cols_pkl = 'group4_model_columns.pkl'
 
 # Your API definition
 app = Flask(__name__)
 
-@app.route("/predict", methods=['GET','POST']) #use decorator pattern for the route
-def predict():
-    if lr:
+@app.route("/predict/<model_name>", methods=['GET','POST']) #use decorator pattern for the route
+def predict(model_name):
+    if loaded_model:
         try:
             json_ = request.json
             print('JSON: \n', json_)
@@ -34,7 +39,7 @@ def predict():
 
             # query = pd.DataFrame(query, columns=model_columns)
             # print(query)
-            prediction = list(lr.predict(query))
+            prediction = list(loaded_model[model_name].predict(query))
             print({'prediction': str(prediction)})
             return jsonify({'prediction': str(prediction)})
             return "Welcome to COMP247 - Group 4 APIs!"
@@ -50,10 +55,14 @@ if __name__ == '__main__':
         port = int(sys.argv[1]) # This is for a command-line input
     except:
         port = 12345 # If you don't provide any port the port will be set to 12345
-
-    lr = joblib.load(path.join(project_folder, models_pkl[0]))
-    print(f'Model {models_pkl[0]} loaded')
-    model_columns = joblib.load(path.join(project_folder, cols_pkl))
+        
+    # load all models:
+    loaded_model = {}
+    for model_name in (models):
+        loaded_model[model_name] = pickle.load(path.join(project_folder, models[model_name]))
+        print(f'Model {model_name} loaded')
+        
+    model_columns = pickle.load(path.join(project_folder, cols_pkl))
     print ('Model columns loaded')
     
     app.run(port=port, debug=True)
