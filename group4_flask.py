@@ -41,21 +41,36 @@ def predict(model_name):
             json_ = request.json
             print('JSON: \n', json_)
             query = pd.DataFrame(json_, columns=model_columns)
-            print(query.info())
-            y_pred = loaded_model[model_name].predict(X_test_df)
             prediction = list(loaded_model[model_name].predict(query))
-            
-            return jsonify({"accuracy":metrics.accuracy_score(y_test_df, y_pred),
-                            "precision":metrics.precision_score(y_test_df, y_pred),
-                            "recall:":metrics.recall_score(y_test_df, y_pred),
-                            "f1:":metrics.f1_score(y_test_df, y_pred),
-                            "prediction": str(prediction)
+            print(f'Returning prediction with {model_name} model:')
+            print('prediction=', prediction)
+            return jsonify({"prediction": str(prediction)})
+        except:
+            return jsonify({'trace': traceback.format_exc()})
+    else:
+        return ('No model available.')
+    
+@app.route("/scores/<model_name>", methods=['GET','POST']) #use decorator pattern for the route
+def scores(model_name):
+    if loaded_model:
+        try:
+            y_pred = loaded_model[model_name].predict(X_test_df)
+            print(f'Returning scores for {model_name}:')
+            accuracy = metrics.accuracy_score(y_test_df, y_pred)
+            precision = metrics.precision_score(y_test_df, y_pred)
+            recall = metrics.recall_score(y_test_df, y_pred)
+            f1 = metrics.f1_score(y_test_df, y_pred)
+            print(f'accuracy={accuracy}  precision={precision}  recall={recall}  f1={f1}')
+            return jsonify({"accuracy": accuracy,
+                            "precision": precision,
+                            "recall:":recall,
+                            "f1": f1
                            })
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
-        print ('Train the model first')
-        return ('No model here to use')
+        return ('No model available.')
+        
 
 if __name__ == '__main__':
     try:
