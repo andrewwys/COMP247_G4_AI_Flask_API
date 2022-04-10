@@ -14,6 +14,7 @@ import joblib
 import sys
 from os import path
 from sklearn import metrics
+from flask_cors import CORS
 
 project_folder = r'C:\Projects\COMP247\Final_Project\_deploy'
 models = {
@@ -33,6 +34,7 @@ y_test_df = pd.read_csv(path.join(project_folder,"y_test_data.csv"))
 
 # Your API definition
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/predict/<model_name>", methods=['GET','POST']) #use decorator pattern for the route
 def predict(model_name):
