@@ -20,8 +20,8 @@ models = {
           "Random_Forest": "group4_rf_fullpipe_rajiv.pkl"
          ,"Neuro_Network": "group4_nn_fullpipe_v7_andrew.pkl"
          ,"Decision_Tree": "group4_dt_fullpipeline_manvir.pkl"
-         ,"Logistic_Regression": "group4_nn_fullpipe_v7_andrew.pkl"
-         ,"SVM": "group4_nn_fullpipe_v7_andrew.pkl"
+         ,"Logistic_Regression": "LR_Model_Chung.pkl"
+         ,"SVM": "SVM_model_parth.pkl"
          }
 
 cols_pkl = 'group4_model_columns.pkl'
@@ -44,7 +44,9 @@ def predict(model_name):
             prediction = list(loaded_model[model_name].predict(query))
             print(f'Returning prediction with {model_name} model:')
             print('prediction=', prediction)
-            return jsonify({"prediction": str(prediction)})
+            res = jsonify({"prediction": str(prediction)})
+            res.headers.add('Access-Control-Allow-Origin', '*')
+            return res
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
@@ -61,11 +63,13 @@ def scores(model_name):
             recall = metrics.recall_score(y_test_df, y_pred)
             f1 = metrics.f1_score(y_test_df, y_pred)
             print(f'accuracy={accuracy}  precision={precision}  recall={recall}  f1={f1}')
-            return jsonify({"accuracy": accuracy,
+            res = jsonify({"accuracy": accuracy,
                             "precision": precision,
                             "recall:":recall,
                             "f1": f1
                            })
+            res.headers.add('Access-Control-Allow-Origin', '*')
+            return res
         except:
             return jsonify({'trace': traceback.format_exc()})
     else:
