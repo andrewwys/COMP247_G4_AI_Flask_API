@@ -67,7 +67,7 @@ def scores(model_name):
             print(f'accuracy={accuracy}  precision={precision}  recall={recall}  f1={f1}')
             res = jsonify({"accuracy": accuracy,
                             "precision": precision,
-                            "recall:":recall,
+                            "recall":recall,
                             "f1": f1
                            })
             res.headers.add('Access-Control-Allow-Origin', '*')
